@@ -1,0 +1,717 @@
+{
+  "Uuid": "ae8e9ea1-e192-4a1c-a6ab-67582c28c248",
+  "IsCustomNode": false,
+  "Description": "",
+  "Name": "02 Exercise_Excel_to_Excel(Python_Split)",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "Id": "f9663e3b1e564f3dbe867d61cba12e35",
+      "NodeType": "FunctionNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "96a0166fd4a74a958941ff1ab482e8f8",
+          "Name": "string[]",
+          "Description": "List of OleDb Database providers that can be used for OldDB connection.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "FunctionSignature": "Factobi.Data.Database.GetOleDbProviders",
+      "Replication": "Auto",
+      "Description": "Provides a list of OleDb Database Providers installed on the system.\n\nDatabase.GetOleDbProviders ( ): string[]"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.CodeBlockNodeModel, DynamoCore",
+      "Id": "a4cea67242774a1a87135a0679ded98d",
+      "NodeType": "CodeBlockNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "0b27367ca7c04f87941e34949dee7d24",
+          "Name": "",
+          "Description": "Value of expression at line 1",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Allows for DesignScript code to be authored directly",
+      "Code": "4;"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "Id": "64397ffdbbcf48dc9c79fd222512d4d5",
+      "NodeType": "FunctionNode",
+      "Inputs": [
+        {
+          "Id": "af4d8299db6e4724aa2334872f6ecdde",
+          "Name": "excelFilePath",
+          "Description": "Full path of the excel file on the local system.\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "a884efee16194044ba59d770262eac9c",
+          "Name": "oleDbProvider",
+          "Description": "Name of the OleDb provider to use for connection.\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "e82078a501c748638aee7eb878feb376",
+          "Name": "Database",
+          "Description": "Database object",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "FunctionSignature": "Factobi.Data.Database.ConnectExcelDatabase@string,string",
+      "Replication": "Auto",
+      "Description": "Connects to a given Excel file as a database.\n\nDatabase.ConnectExcelDatabase (excelFilePath: string, oleDbProvider: string): Database"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "59b936c473ac4e76a86802fc85b5379c",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "3731a048a1294a379c62a888f956651e",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\02 Split\\Excel_sales_w04_2.xlsx"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "Id": "a43a4d2efa00471fba0d8dc9b6a9ca5f",
+      "NodeType": "FunctionNode",
+      "Inputs": [
+        {
+          "Id": "d401c309451a4c9a9067ee8d4b967524",
+          "Name": "list",
+          "Description": "List to fetch an item from.\n\nvar[]..[]",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "6fc0e0d8edfd4fbc8837389162f6985f",
+          "Name": "index",
+          "Description": "Index of the item to be fetched.\n\nint",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "b166d6603df941f4af6fe1cd589fc2c5",
+          "Name": "item",
+          "Description": "Item in the list at the given index.",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "FunctionSignature": "DSCore.List.GetItemAtIndex@var[]..[],int",
+      "Replication": "Auto",
+      "Description": "Returns an item from the given list that's located at the specified index.\n\nList.GetItemAtIndex (list: var[]..[], index: int): var[]..[]"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "9613e56a3798457f895c7d5de83e7787",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "5f7efd39a0c448a69e1523a610b6cd98",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "sales_w04"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "Id": "a0f3d78198ff48999c39972b29de2b6a",
+      "NodeType": "FunctionNode",
+      "Inputs": [
+        {
+          "Id": "23e7ee63c855479f9f976d7e042f35c4",
+          "Name": "database",
+          "Description": "Factobi.Data.Database",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "8daf7bcc81794c4fbf38e9f5672baa93",
+          "Name": "tableName",
+          "Description": "Name of the table to get data from.\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "ebdfba520dd14f249df4c25f65917932",
+          "Name": "Table",
+          "Description": "Table object",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "FunctionSignature": "Factobi.Data.Database.GetData@string",
+      "Replication": "Auto",
+      "Description": "Gets Table data from the database as per the given a table name.\n\nDatabase.GetData (tableName: string): Table"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "Id": "16b0f548e70748cf887f210e9c2ec347",
+      "NodeType": "FunctionNode",
+      "Inputs": [
+        {
+          "Id": "70285e2fd37d4d0e821cb07acd617c65",
+          "Name": "table",
+          "Description": "Factobi.Data.Table",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "10c845717238449da4ec1f436e025106",
+          "Name": "columnName",
+          "Description": "Name of the column to get all data.\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "b7924e8ddb8d4db99066ef524d2faa85",
+          "Name": "var[]",
+          "Description": "A list of objects stored in the column",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "FunctionSignature": "Factobi.Data.Table.GetColumnData@string",
+      "Replication": "Auto",
+      "Description": "Gets all data in the table for a given column name.\n\nTable.GetColumnData (columnName: string): var[]"
+    },
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "Code": "# Load the Python Standard and DesignScript Libraries\r\nimport sys\r\nimport clr\r\nimport numpy as np\r\nimport pandas as pd\r\n\r\n# Add references\r\nclr.AddReference('ProtoGeometry')\r\nfrom Autodesk.DesignScript.Geometry import *\r\n\r\n# The inputs to this node will be stored as a list in the IN variables.\r\ndataEnteringNode = IN\r\n\r\n# Extract the list from the input\r\ncombined_column = IN[0]\r\n\r\n# Create a DataFrame from the list\r\ndf = pd.DataFrame({'Combined_Column': combined_column})\r\n\r\n# Specify the separator(s)\r\nseparators = '|'.join(['-', ',', ';'])  # Combine separators into a regex pattern\r\n# Add more separators as needed\r\n\r\n# Split the combined column based on the specified separators\r\ndf_split = df['Combined_Column'].str.split(separators, expand=True)\r\n\r\n# Rename the columns if needed\r\ndf_split.columns = [f'Column{i}' for i in range(1, df_split.shape[1] + 1)]\r\n\r\n# Transpose the DataFrame and convert to a list of lists\r\nsplit_columns = df_split.T.values.tolist()\r\n\r\n# Assign the split columns to the OUT variables.\r\nOUT = split_columns\r\n",
+      "Engine": "CPython3",
+      "VariableInputPorts": true,
+      "Id": "82a874076c8c47038b7bdb3af52b44c2",
+      "NodeType": "PythonScriptNode",
+      "Inputs": [
+        {
+          "Id": "512d6f2925f641f59dca824160e2d122",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "50410fc434f046c294b4e379b4e243de",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded Python script."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "2841b394e09e4426b8c18c8d72872455",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "88d72c300c234e889feb167e833f8195",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "Order_ID"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Watch, CoreNodeModels",
+      "WatchWidth": 200.0,
+      "WatchHeight": 200.0,
+      "Id": "a5eb2794b7084733823fa0fa6eb4584d",
+      "NodeType": "ExtensionNode",
+      "Inputs": [
+        {
+          "Id": "c7ef36af9ade4201825e4e7a06ad125f",
+          "Name": "",
+          "Description": "Node to show output from",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "eea36c0813b14afbb068506c95a9c44a",
+          "Name": "",
+          "Description": "Node output",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Visualizes a node's output"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Watch, CoreNodeModels",
+      "WatchWidth": 200.0,
+      "WatchHeight": 200.0,
+      "Id": "a8e2d1db578a430199776a24138bbec1",
+      "NodeType": "ExtensionNode",
+      "Inputs": [
+        {
+          "Id": "a688531eb0ff4d069408fe93614989d5",
+          "Name": "",
+          "Description": "Node to show output from",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "de885612dbfe4a6d8e5d4773d0344e0d",
+          "Name": "",
+          "Description": "Node output",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Visualizes a node's output"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "Id": "e750991ddd134716b1863f0dbdc99a5e",
+      "NodeType": "FunctionNode",
+      "Inputs": [
+        {
+          "Id": "4016381f32ac411884f89a18edbd00e4",
+          "Name": "filePath",
+          "Description": "string",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "9d6949fb915d43b5a1db4a38563d7701",
+          "Name": "data",
+          "Description": "var[][]",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "7fda8d0836a8429d8f9fbba0af751ae9",
+          "Name": "void",
+          "Description": "void",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "FunctionSignature": "DSOffice.Data.ExportCSV@string,var[][]",
+      "Replication": "Auto",
+      "Description": "Data.ExportCSV (filePath: string, data: var[][]): void"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "ff860fa5cace4721a07796c93d4a83c0",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "56c40996a1ff441fb18b2653f794cbc2",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\02 Split\\Split_Output.csv"
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "96a0166fd4a74a958941ff1ab482e8f8",
+      "End": "d401c309451a4c9a9067ee8d4b967524",
+      "Id": "3b79282def4a4ec7b77e53bc8d645ef9",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "0b27367ca7c04f87941e34949dee7d24",
+      "End": "6fc0e0d8edfd4fbc8837389162f6985f",
+      "Id": "1f29c78e9ba9485983c0c9e6bf43ad30",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "e82078a501c748638aee7eb878feb376",
+      "End": "23e7ee63c855479f9f976d7e042f35c4",
+      "Id": "b35deb5715d44ce399573739b7ffe534",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "3731a048a1294a379c62a888f956651e",
+      "End": "af4d8299db6e4724aa2334872f6ecdde",
+      "Id": "258b3432103341e999802465a7d69db2",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "b166d6603df941f4af6fe1cd589fc2c5",
+      "End": "a884efee16194044ba59d770262eac9c",
+      "Id": "1a4e2cda23574fac9f8f03d3bbfd4c5f",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "5f7efd39a0c448a69e1523a610b6cd98",
+      "End": "8daf7bcc81794c4fbf38e9f5672baa93",
+      "Id": "0ba698f612de4691b5de5507378e06f8",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "ebdfba520dd14f249df4c25f65917932",
+      "End": "70285e2fd37d4d0e821cb07acd617c65",
+      "Id": "6409001fd1694a2cb5c7dab515a983b4",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "b7924e8ddb8d4db99066ef524d2faa85",
+      "End": "c7ef36af9ade4201825e4e7a06ad125f",
+      "Id": "d1793239a4b24eb88cb5430547058993",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "b7924e8ddb8d4db99066ef524d2faa85",
+      "End": "512d6f2925f641f59dca824160e2d122",
+      "Id": "9d357f0913bb40c19b1e68a62c377161",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "50410fc434f046c294b4e379b4e243de",
+      "End": "a688531eb0ff4d069408fe93614989d5",
+      "Id": "85e8618e5f984ac08a4d60ce9b704590",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "88d72c300c234e889feb167e833f8195",
+      "End": "10c845717238449da4ec1f436e025106",
+      "Id": "5b1781302ce84faa927a583301b3950a",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "de885612dbfe4a6d8e5d4773d0344e0d",
+      "End": "9d6949fb915d43b5a1db4a38563d7701",
+      "Id": "d3febc78bffa467c90de75794a5f8799",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "56c40996a1ff441fb18b2653f794cbc2",
+      "End": "4016381f32ac411884f89a18edbd00e4",
+      "Id": "c9dff08721c849bfa5731727dfcc8c3b",
+      "IsHidden": "False"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [
+    {
+      "Name": "Factobi.Data.dll",
+      "ReferenceType": "ZeroTouch",
+      "Nodes": [
+        "f9663e3b1e564f3dbe867d61cba12e35",
+        "64397ffdbbcf48dc9c79fd222512d4d5",
+        "a0f3d78198ff48999c39972b29de2b6a",
+        "16b0f548e70748cf887f210e9c2ec347"
+      ]
+    },
+    {
+      "Name": "Excel_sales_w04_2.xlsx",
+      "ReferenceType": "External",
+      "Nodes": [
+        "59b936c473ac4e76a86802fc85b5379c"
+      ]
+    },
+    {
+      "Name": "Split_Output.csv",
+      "ReferenceType": "External",
+      "Nodes": [
+        "ff860fa5cace4721a07796c93d4a83c0"
+      ]
+    }
+  ],
+  "EnableLegacyPolyCurveBehavior": true,
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Properties",
+      "Version": "3.0",
+      "Data": {}
+    }
+  ],
+  "Author": "",
+  "Linting": {
+    "activeLinter": "None",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "3.0.1.7382",
+      "RunType": "Automatic",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "_Background Preview",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "ConnectorPins": [],
+    "NodeViews": [
+      {
+        "Id": "f9663e3b1e564f3dbe867d61cba12e35",
+        "Name": "Database.GetOleDbProviders",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 32.108372601966494,
+        "Y": 162.99806123057343
+      },
+      {
+        "Id": "a4cea67242774a1a87135a0679ded98d",
+        "Name": "Code Block",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 88.59501948623938,
+        "Y": 321.4847081148464
+      },
+      {
+        "Id": "64397ffdbbcf48dc9c79fd222512d4d5",
+        "Name": "Database.ConnectExcelDatabase",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 603.4581490495912,
+        "Y": 68.60345445301698
+      },
+      {
+        "Id": "59b936c473ac4e76a86802fc85b5379c",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 343.3687556669611,
+        "Y": -41.70223550533166
+      },
+      {
+        "Id": "a43a4d2efa00471fba0d8dc9b6a9ca5f",
+        "Name": "List.GetItemAtIndex",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 358.0922963565372,
+        "Y": 212.7839164602087
+      },
+      {
+        "Id": "9613e56a3798457f895c7d5de83e7787",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 661.8258966834012,
+        "Y": 232.39850336467933
+      },
+      {
+        "Id": "a0f3d78198ff48999c39972b29de2b6a",
+        "Name": "Database.GetData",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 938.6785492945774,
+        "Y": 65.47156372323008
+      },
+      {
+        "Id": "16b0f548e70748cf887f210e9c2ec347",
+        "Name": "Table.GetColumnData",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 1235.8399625361953,
+        "Y": 99.2792848362721
+      },
+      {
+        "Id": "82a874076c8c47038b7bdb3af52b44c2",
+        "Name": "Python Script",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 1495.406249526281,
+        "Y": 257.6201770897278
+      },
+      {
+        "Id": "2841b394e09e4426b8c18c8d72872455",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 656.9617066135748,
+        "Y": 395.1993560310576
+      },
+      {
+        "Id": "a5eb2794b7084733823fa0fa6eb4584d",
+        "Name": "Watch",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 1496.3779572232677,
+        "Y": -152.919384187775
+      },
+      {
+        "Id": "a8e2d1db578a430199776a24138bbec1",
+        "Name": "Watch",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 1711.526097258113,
+        "Y": 179.7511114202785
+      },
+      {
+        "Id": "e750991ddd134716b1863f0dbdc99a5e",
+        "Name": "Data.ExportCSV",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 2117.0779316931325,
+        "Y": 140.60518145550844
+      },
+      {
+        "Id": "ff860fa5cace4721a07796c93d4a83c0",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 1807.0421663721525,
+        "Y": -45.729445176797924
+      }
+    ],
+    "Annotations": [],
+    "X": -548.9739748445214,
+    "Y": 105.2726699640005,
+    "Zoom": 0.6386359967051236
+  }
+}
