@@ -1,0 +1,535 @@
+{
+  "Uuid": "ae8e9ea1-e192-4a1c-a6ab-67582c28c248",
+  "IsCustomNode": false,
+  "Description": "",
+  "Name": "Exercise_Excel_to_CSV(Python_Dates)",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "Id": "64397ffdbbcf48dc9c79fd222512d4d5",
+      "NodeType": "FunctionNode",
+      "Inputs": [
+        {
+          "Id": "af4d8299db6e4724aa2334872f6ecdde",
+          "Name": "excelFilePath",
+          "Description": "Full path of the excel file on the local system.\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "e82078a501c748638aee7eb878feb376",
+          "Name": "Database",
+          "Description": "Database object",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "FunctionSignature": "Factobi.Data.Database.ConnectExcelDatabase@string",
+      "Replication": "Auto",
+      "Description": "Connects to a given Excel file as a database.\n\nDatabase.ConnectExcelDatabase (excelFilePath: string): Database"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "59b936c473ac4e76a86802fc85b5379c",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "3731a048a1294a379c62a888f956651e",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\03 Dates\\Excel_sales_w04_2.xlsx"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "9613e56a3798457f895c7d5de83e7787",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "5f7efd39a0c448a69e1523a610b6cd98",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "sales_w04"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "Id": "a0f3d78198ff48999c39972b29de2b6a",
+      "NodeType": "FunctionNode",
+      "Inputs": [
+        {
+          "Id": "23e7ee63c855479f9f976d7e042f35c4",
+          "Name": "database",
+          "Description": "Factobi.Data.Database",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "8daf7bcc81794c4fbf38e9f5672baa93",
+          "Name": "tableName",
+          "Description": "Name of the table to get data from.\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "ebdfba520dd14f249df4c25f65917932",
+          "Name": "Table",
+          "Description": "Table object",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "FunctionSignature": "Factobi.Data.Database.GetData@string",
+      "Replication": "Auto",
+      "Description": "Gets Table data from the database as per the given a table name.\n\nDatabase.GetData (tableName: string): Table"
+    },
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "Code": "# Load the Python Standard and DesignScript Libraries\r\nimport sys\r\nimport clr\r\nimport numpy as np\r\nimport pandas as pd\r\nfrom dateutil import parser\r\n\r\n\r\n# The inputs to this node will be stored as a list in the IN variables.\r\ndataEnteringNode = IN\r\n\r\n# Extract the list from the input\r\nOrder_Date = IN[0]\r\n\r\n# Assuming 'order_date_column' is your data, create a DataFrame\r\ndf = pd.DataFrame({'Order_Date': Order_Date})\r\n\r\n# Function to convert Excel date serial numbers to datetime\r\ndef convert_excel_date(serial_number):\r\n    if pd.notnull(serial_number):\r\n        try:\r\n            return pd.to_datetime('1899-12-30') + pd.to_timedelta(serial_number, 'D')\r\n        except ValueError:\r\n            return pd.NaT\r\n    else:\r\n        return pd.NaT\r\n\r\n# Function to parse various date formats\r\ndef parse_date(date_str):\r\n    try:\r\n        return parser.parse(str(date_str), fuzzy=True)\r\n    except parser.ParserError:\r\n        return pd.NaT\r\n\r\n# Assuming 'Order_Date' is the column with different date formats\r\ndf['Order_DateN'] = df['Order_Date'].apply(lambda x: convert_excel_date(x) if isinstance(x, (int, float)) else parse_date(x))\r\n\r\n# Extracting date-related information\r\ndf['Date'] = pd.to_datetime(df['Order_DateN'], errors='coerce', format='%m/%d/%Y')\r\ndf['Year'] = df['Order_DateN'].dt.year\r\n\r\n# Handle non-finite values in Quarter\r\ndf['Quarter'] = df['Order_DateN'].dt.quarter\r\ndf['Quarter'] = df['Quarter'].replace([np.inf, -np.inf, np.nan], 0).astype(int)\r\n\r\ndf['Quarter_Name'] = df['Order_DateN'].dt.to_period('Q').astype(str).str.replace(r'\\d+Q', 'Q')\r\n# Handle non-finite values in Month\r\ndf['Month'] = df['Order_DateN'].dt.month.replace([np.inf, -np.inf, np.nan], 0).astype(int)\r\n\r\ndf['Month_Name'] = df['Order_DateN'].dt.strftime('%B')\r\ndf['Month_Name_Short'] = df['Order_DateN'].dt.strftime('%b')  # Short month names\r\ndf['Week_Number'] = df['Order_DateN'].dt.isocalendar().week\r\n# Handle non-finite values in Weekday\r\ndf['Weekday'] = (df['Order_DateN'].dt.weekday + 1).replace([np.inf, -np.inf, np.nan], 0).astype(int)  # Adding 1 to make Monday = 1, Sunday = 7\r\n\r\ndf['Weekday_Name'] = df['Order_DateN'].dt.strftime('%A')\r\ndf['Weekday_Name_Short'] = df['Order_DateN'].dt.strftime('%a')  # Short weekday names\r\n\r\n# Displaying the resulting table\r\ndf_dates_info = df[['Order_Date', 'Order_DateN', 'Date', 'Year', 'Quarter', 'Quarter_Name', 'Month', 'Month_Name', 'Month_Name_Short', 'Week_Number', 'Weekday', 'Weekday_Name', 'Weekday_Name_Short']]\r\n\r\n\r\n# Specify the output path\r\noutput_path = IN[1]\r\n\r\n# Save final_df2 to Excel\r\ndf_dates_info.to_csv(output_path, index=False)\r\n\r\n# Assign the output path to the OUT variable\r\nOUT = output_path",
+      "Engine": "CPython3",
+      "VariableInputPorts": true,
+      "Id": "82a874076c8c47038b7bdb3af52b44c2",
+      "NodeType": "PythonScriptNode",
+      "Inputs": [
+        {
+          "Id": "512d6f2925f641f59dca824160e2d122",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "dcbd66e3c2db4315991037c5dcd8c9b3",
+          "Name": "IN[1]",
+          "Description": "Input #1",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "50410fc434f046c294b4e379b4e243de",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded Python script."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "2841b394e09e4426b8c18c8d72872455",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "88d72c300c234e889feb167e833f8195",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "Order_Date"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Watch, CoreNodeModels",
+      "WatchWidth": 252.0,
+      "WatchHeight": 38.0,
+      "Id": "ed90bf9413274c2b90dbca52c5333aaa",
+      "NodeType": "ExtensionNode",
+      "Inputs": [
+        {
+          "Id": "4034f01cc49b45668ff58953c8fce0b3",
+          "Name": "",
+          "Description": "Node to show output from",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "c9f940cf1f1640299b4df84159df9ea5",
+          "Name": "",
+          "Description": "Node output",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Visualizes a node's output"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "Id": "04da46e80b054b6e80973cc441ebe2ca",
+      "NodeType": "FunctionNode",
+      "Inputs": [
+        {
+          "Id": "b01ad0c7c5b94ed0b8c874bc094dc2d9",
+          "Name": "table",
+          "Description": "Factobi.Data.Table",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "fd23c7357227481180353c33fd3a2746",
+          "Name": "columnName",
+          "Description": "Name of the column to get all data.\n\nstring",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "2f8bf85b79a34ccda03fa16237f9eae5",
+          "Name": "var[]",
+          "Description": "A list of objects stored in the column",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "FunctionSignature": "Factobi.Data.Table.GetColumnData@string",
+      "Replication": "Auto",
+      "Description": "Gets all data in the table for a given column name.\n\nTable.GetColumnData (columnName: string): var[]"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Watch, CoreNodeModels",
+      "WatchWidth": 200.0,
+      "WatchHeight": 200.0,
+      "Id": "22b7a24f56a14f94867942bc8bb4e0a7",
+      "NodeType": "ExtensionNode",
+      "Inputs": [
+        {
+          "Id": "f46b393617694b378ecdc1f5c42b769f",
+          "Name": "",
+          "Description": "Node to show output from",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "afae31af9ab64278aed8e0b2cf15f4c0",
+          "Name": "",
+          "Description": "Node output",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Visualizes a node's output"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "ca393d7b442f489791c330b2b12235ef",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "ede95e7432264198aeebc1cadff4bda1",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\03 Dates\\Dates_Output.csv"
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "e82078a501c748638aee7eb878feb376",
+      "End": "23e7ee63c855479f9f976d7e042f35c4",
+      "Id": "b35deb5715d44ce399573739b7ffe534",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "3731a048a1294a379c62a888f956651e",
+      "End": "af4d8299db6e4724aa2334872f6ecdde",
+      "Id": "f56783828ad54df2bd843eb7b2a3d1ca",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "5f7efd39a0c448a69e1523a610b6cd98",
+      "End": "8daf7bcc81794c4fbf38e9f5672baa93",
+      "Id": "0ba698f612de4691b5de5507378e06f8",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "ebdfba520dd14f249df4c25f65917932",
+      "End": "4034f01cc49b45668ff58953c8fce0b3",
+      "Id": "86564076c14e49ebb22fbb497e194054",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "ebdfba520dd14f249df4c25f65917932",
+      "End": "b01ad0c7c5b94ed0b8c874bc094dc2d9",
+      "Id": "09f99e09e47c43a09ad6a86d23b24416",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "88d72c300c234e889feb167e833f8195",
+      "End": "fd23c7357227481180353c33fd3a2746",
+      "Id": "525c3e64562f4936a0b6d90b35d6295a",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "2f8bf85b79a34ccda03fa16237f9eae5",
+      "End": "512d6f2925f641f59dca824160e2d122",
+      "Id": "dac8be88dc7e4dfba69fa3158d3dfb18",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "2f8bf85b79a34ccda03fa16237f9eae5",
+      "End": "f46b393617694b378ecdc1f5c42b769f",
+      "Id": "4efe12f77a6d452eb915aa98789f6179",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "ede95e7432264198aeebc1cadff4bda1",
+      "End": "dcbd66e3c2db4315991037c5dcd8c9b3",
+      "Id": "4c689e36d8fa4b3fb17a430df0d81f7a",
+      "IsHidden": "False"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [
+    {
+      "Name": "Factobi.Data.dll",
+      "ReferenceType": "ZeroTouch",
+      "Nodes": [
+        "64397ffdbbcf48dc9c79fd222512d4d5",
+        "a0f3d78198ff48999c39972b29de2b6a",
+        "04da46e80b054b6e80973cc441ebe2ca"
+      ]
+    },
+    {
+      "Name": "Excel_sales_w04_2.xlsx",
+      "ReferenceType": "External",
+      "Nodes": [
+        "59b936c473ac4e76a86802fc85b5379c"
+      ]
+    },
+    {
+      "Name": "Dates_Output.csv",
+      "ReferenceType": "External",
+      "Nodes": [
+        "82a874076c8c47038b7bdb3af52b44c2",
+        "ca393d7b442f489791c330b2b12235ef"
+      ]
+    }
+  ],
+  "EnableLegacyPolyCurveBehavior": true,
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Properties",
+      "Version": "3.0",
+      "Data": {}
+    }
+  ],
+  "Author": "",
+  "Linting": {
+    "activeLinter": "None",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "3.0.1.7382",
+      "RunType": "Automatic",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "_Background Preview",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "ConnectorPins": [],
+    "NodeViews": [
+      {
+        "Id": "64397ffdbbcf48dc9c79fd222512d4d5",
+        "Name": "Database.ConnectExcelDatabase",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 488.99848008595177,
+        "Y": -16.052914226699897
+      },
+      {
+        "Id": "59b936c473ac4e76a86802fc85b5379c",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 143.99848008595177,
+        "Y": -105.0529142266999
+      },
+      {
+        "Id": "9613e56a3798457f895c7d5de83e7787",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 488.99848008595177,
+        "Y": 161.94708577330016
+      },
+      {
+        "Id": "a0f3d78198ff48999c39972b29de2b6a",
+        "Name": "Database.GetData",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 905.9984800859518,
+        "Y": 55.9470857733001
+      },
+      {
+        "Id": "82a874076c8c47038b7bdb3af52b44c2",
+        "Name": "Python Script",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 1696.4400979671893,
+        "Y": 282.4529117692791
+      },
+      {
+        "Id": "2841b394e09e4426b8c18c8d72872455",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 905.9984800859518,
+        "Y": 233.1970857733001
+      },
+      {
+        "Id": "ed90bf9413274c2b90dbca52c5333aaa",
+        "Name": "Watch",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 1243.9800052838207,
+        "Y": -29.205023271936
+      },
+      {
+        "Id": "04da46e80b054b6e80973cc441ebe2ca",
+        "Name": "Table.GetColumnData",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 1230.9984800859518,
+        "Y": 184.1970857733001
+      },
+      {
+        "Id": "22b7a24f56a14f94867942bc8bb4e0a7",
+        "Name": "Watch",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 1665.8512296079743,
+        "Y": -12.474306719569569
+      },
+      {
+        "Id": "ca393d7b442f489791c330b2b12235ef",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 1407.1042327279438,
+        "Y": 481.8434201441583
+      }
+    ],
+    "Annotations": [],
+    "X": -1329.8407846592368,
+    "Y": -83.61223603914306,
+    "Zoom": 0.9318762200814767
+  }
+}
