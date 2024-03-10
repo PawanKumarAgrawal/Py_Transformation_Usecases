@@ -1,0 +1,9 @@
+CustomerID,Name,City,IsDuplicate
+104, Alice Johnson , Houston      ,True
+119, Alice Johnson , Houston      ,True
+103, Bob Smith     , Chicago      ,True
+118, Bob Smith     , Chicago      ,True
+102, Jane Doe      , Los Angeles  ,True
+117, Jane Doe      , Los Angeles  ,True
+101, John Doe      , New York     ,True
+116, John Doe      , New York     ,True
