@@ -1,0 +1,256 @@
+{
+  "Uuid": "563dd426-9887-4b6f-bba3-1a8cb13ba95a",
+  "IsCustomNode": false,
+  "Description": "",
+  "Name": "Exercise_Excel_to_Excel(Python_UnitConversion)",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "8166478eb5ac4dd6b75dbd761ead2eb2",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "2ff69ea8da8b4003834fc66d6ac45188",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\11 Unit Conversion\\Conversion_Output.xlsx"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "a021163421c9496bb957d9f694c1d330",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "4d3c939fff65457c9a9f9112ba56c96a",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\11 Unit Conversion\\Conversion_Data.xlsx"
+    },
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "Code": "# Load the Python Standard and DesignScript Libraries\r\nimport sys\r\nimport clr\r\nimport pandas as pd\r\n\r\n# The inputs to this node will be stored as a list in the IN variables.\r\ndataEnteringNode = IN\r\n\r\n# Place your code below this line\r\nData1 = IN[0]\r\ndf_data = pd.read_excel(Data1)\r\n\r\nData2 = IN[1]\r\ndf_unit_conversion = pd.read_excel(Data2)\r\n\r\n# Function to split quantity and unit from weight string\r\ndef split_weight(weight_str):\r\n    quantity, unit = weight_str.split(' ')\r\n    return float(quantity), unit\r\n    \r\n\r\n# Apply split_weight function to df_data table\r\ndf_data[['Quantity', 'Unit']] = df_data['Weight'].apply(lambda x: pd.Series(split_weight(x)))\r\n\r\n\r\n# Merge df_data with unit_conversion table\r\nmerged_table = pd.merge(df_data, df_unit_conversion, left_on='Unit', right_on='To', how='left')\r\n\r\n\r\n# Calculate weights in kilograms\r\nmerged_table['Weight_in_kg'] = merged_table['Quantity'] / merged_table['Conversion Factor']\r\n\r\n\r\nfinal_df = merged_table[['ProductID', 'Name', 'Weight', 'Weight_in_kg']]\r\n\r\n\r\n\r\n# Assign your output to the OUT variable.\r\noutput_path = IN[2]\r\n\r\n# Save final_df to Excel\r\nfinal_df.to_excel(output_path, index=False)\r\n\r\nOUT = output_path",
+      "Engine": "CPython3",
+      "VariableInputPorts": true,
+      "Id": "fac04d705d4a4429b1aaae01e73371d3",
+      "NodeType": "PythonScriptNode",
+      "Inputs": [
+        {
+          "Id": "186ffa182f1345de9bee64042518baf4",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "da6f302375ea47c1955021e1c2eb0fdb",
+          "Name": "IN[1]",
+          "Description": "Input #1",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "35d2b581f4444db993c98a98bb4605c0",
+          "Name": "IN[2]",
+          "Description": "Input #2",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "fead84767d1a40d3ad84f84a23eb8c45",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded Python script."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "b8c1ad784ed84d24a952227d66e9d02d",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "c2e18110441a4779a19e3ad4bb6efe8f",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\11 Unit Conversion\\Unit_Conversion.xlsx"
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "2ff69ea8da8b4003834fc66d6ac45188",
+      "End": "35d2b581f4444db993c98a98bb4605c0",
+      "Id": "a4f618909f4d43d68b5a5332ff430fe9",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "4d3c939fff65457c9a9f9112ba56c96a",
+      "End": "186ffa182f1345de9bee64042518baf4",
+      "Id": "ececf6c8b9f3448cbfa6d11f40d7896e",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "c2e18110441a4779a19e3ad4bb6efe8f",
+      "End": "da6f302375ea47c1955021e1c2eb0fdb",
+      "Id": "1a8ef57db57143848e506ac1fe407ba3",
+      "IsHidden": "False"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [
+    {
+      "Name": "Conversion_Output.xlsx",
+      "ReferenceType": "External",
+      "Nodes": [
+        "8166478eb5ac4dd6b75dbd761ead2eb2",
+        "fac04d705d4a4429b1aaae01e73371d3"
+      ]
+    },
+    {
+      "Name": "Conversion_Data.xlsx",
+      "ReferenceType": "External",
+      "Nodes": [
+        "a021163421c9496bb957d9f694c1d330"
+      ]
+    },
+    {
+      "Name": "Unit_Conversion.xlsx",
+      "ReferenceType": "External",
+      "Nodes": [
+        "b8c1ad784ed84d24a952227d66e9d02d"
+      ]
+    }
+  ],
+  "EnableLegacyPolyCurveBehavior": null,
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Properties",
+      "Version": "3.0",
+      "Data": {}
+    }
+  ],
+  "Author": "",
+  "Linting": {
+    "activeLinter": "None",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "3.0.1.7382",
+      "RunType": "Automatic",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "_Background Preview",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "ConnectorPins": [],
+    "NodeViews": [
+      {
+        "Id": "8166478eb5ac4dd6b75dbd761ead2eb2",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 16.880318045835963,
+        "Y": 435.0103779662363
+      },
+      {
+        "Id": "a021163421c9496bb957d9f694c1d330",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 18.644413459586872,
+        "Y": 45.03908504460941
+      },
+      {
+        "Id": "fac04d705d4a4429b1aaae01e73371d3",
+        "Name": "Python Script",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 304.83085503499035,
+        "Y": 179.0
+      },
+      {
+        "Id": "b8c1ad784ed84d24a952227d66e9d02d",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 18.430297307553303,
+        "Y": 236.58457248250488
+      }
+    ],
+    "Annotations": [],
+    "X": 23.53552499999998,
+    "Y": 90.03184999999996,
+    "Zoom": 0.7082312500000001
+  }
+}
