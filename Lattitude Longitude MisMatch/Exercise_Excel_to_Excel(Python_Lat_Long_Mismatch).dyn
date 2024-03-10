@@ -1,0 +1,203 @@
+{
+  "Uuid": "242b25c1-5999-4e86-8fc3-9454f3d5739a",
+  "IsCustomNode": false,
+  "Description": "",
+  "Name": "Exercise_Excel_to_Excel(Python_Lat_Long_Mismatch)",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "77c261bc9d3f418a9ede02f025676ac9",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "e4f2640697d04673b38cd4e6528b586f",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\12 Lattitude Longitude MisMatch\\Lat_Long_Output.xlsx"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "75e7ba4edbc74b8d9bcce5a6ed98267c",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "c3eadc0a2d4f4d8a97f6c3ce371f26f4",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\12 Lattitude Longitude MisMatch\\Lat_Long_Data.xlsx"
+    },
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "Code": "# Load the Python Standard and DesignScript Libraries\r\nimport sys\r\nimport clr\r\nimport pandas as pd\r\n\r\n# The inputs to this node will be stored as a list in the IN variables.\r\ndataEnteringNode = IN\r\n\r\n# Place your code below this line\r\n\r\nData = IN[0]\r\n\r\ndata = pd.read_excel(Data)\r\n\r\n# Function to fix the direction anomaly and create a new column\r\ndef fix_direction(row):\r\n    new_lat = row['Latitude']\r\n    new_long = row['Longitude']\r\n    \r\n    # Check if latitude and longitude need to be flipped\r\n    if row['Latitude'][-1] not in ('N', 'S') and row['Longitude'][-1] not in ('E', 'W'):\r\n        new_lat = row['Longitude']\r\n        new_long = row['Latitude']\r\n        fix_action = 'Direction exchanged to fix the anomaly'\r\n    else:\r\n        fix_action = ''\r\n    \r\n    return pd.Series([new_lat, new_long, fix_action], index=['Latitude', 'Longitude', 'Fix Action'])\r\n    \r\n\r\n# Apply the function to each row\r\ndata[['Latitude', 'Longitude', 'Fix Action']] = data.apply(fix_direction, axis=1)\r\n\r\n\r\nfinal_df = data[['DeliveryID', 'Location', 'Latitude', 'Longitude', 'Fix Action']]\r\n\r\n\r\n\r\n# Assign your output to the OUT variable.\r\noutput_path = IN[1]\r\n\r\n# Save final_df to Excel\r\nfinal_df.to_excel(output_path, index=False)\r\n\r\nOUT = output_path\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n# Assign your output to the OUT variable.\r\nOUT = 0",
+      "Engine": "CPython3",
+      "VariableInputPorts": true,
+      "Id": "457ccbacd93046dfac6ef75ccfd29d16",
+      "NodeType": "PythonScriptNode",
+      "Inputs": [
+        {
+          "Id": "54b8bc4aae9c4225b2f8d34d89338324",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "da8308b07fab4c96993359900a950818",
+          "Name": "IN[1]",
+          "Description": "Input #1",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "c43848a00b554b43900adb43de1971f5",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded Python script."
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "e4f2640697d04673b38cd4e6528b586f",
+      "End": "da8308b07fab4c96993359900a950818",
+      "Id": "b97c122341c4483a85622ec3317b31a7",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "c3eadc0a2d4f4d8a97f6c3ce371f26f4",
+      "End": "54b8bc4aae9c4225b2f8d34d89338324",
+      "Id": "4f5a6d75aecb4db79c7b8e6f159c2d60",
+      "IsHidden": "False"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [
+    {
+      "Name": "Lat_Long_Output.xlsx",
+      "ReferenceType": "External",
+      "Nodes": [
+        "77c261bc9d3f418a9ede02f025676ac9"
+      ]
+    },
+    {
+      "Name": "Lat_Long_Data.xlsx",
+      "ReferenceType": "External",
+      "Nodes": [
+        "75e7ba4edbc74b8d9bcce5a6ed98267c"
+      ]
+    }
+  ],
+  "EnableLegacyPolyCurveBehavior": null,
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Properties",
+      "Version": "3.0",
+      "Data": {}
+    }
+  ],
+  "Author": "",
+  "Linting": {
+    "activeLinter": "None",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "3.0.1.7382",
+      "RunType": "Automatic",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "_Background Preview",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "ConnectorPins": [],
+    "NodeViews": [
+      {
+        "Id": "77c261bc9d3f418a9ede02f025676ac9",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 57.88723668999353,
+        "Y": 440.8941553341511
+      },
+      {
+        "Id": "75e7ba4edbc74b8d9bcce5a6ed98267c",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 18.0,
+        "Y": 161.0
+      },
+      {
+        "Id": "457ccbacd93046dfac6ef75ccfd29d16",
+        "Name": "Python Script",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 329.6646822405155,
+        "Y": 275.6695019366627
+      }
+    ],
+    "Annotations": [],
+    "X": 20.525664292295716,
+    "Y": 14.898981943024012,
+    "Zoom": 0.5937671406250001
+  }
+}
