@@ -1,0 +1,204 @@
+{
+  "Uuid": "3c8beae6-e99c-443c-8811-525bb3454328",
+  "IsCustomNode": false,
+  "Description": "",
+  "Name": "Exercise_Excel_to_CSV(Python_DataType_Format)",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "0a263a90d9244e5780be2fb49f211009",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "5ed411603c8842b68b05717188821df1",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\09 DataType_Format\\DataType_Format_Output.xlsx"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "866d5a1282d04c62abe70075bd845420",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "c616769fdb1f424e8d5be9508fe8b8f2",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\09 DataType_Format\\Excel_sales_w04_2.xlsx"
+    },
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "Code": "# Load the Python Standard and DesignScript Libraries\r\nimport sys\r\nimport clr\r\nimport numpy as np\r\nimport pandas as pd\r\n\r\n# The inputs to this node will be stored as a list in the IN variables.\r\ndataEnteringNode = IN\r\n\r\n# Place your code below this line\r\ndf = pd.read_excel(IN[0], usecols = ['Quantity', 'Discount'])\r\n\r\n\r\n# Convert 'Quantity' column from object to int16\r\ndf['Quantity'] = df['Quantity'].astype(np.int16)\r\n\r\n# Convert 'Discount' column from object to float32\r\ndf['Discount'] = df['Discount'].astype(np.float32)\r\n\r\n# Displaying the resulting table with Missing Values handled\r\ndf_new = df[['Quantity', 'Discount']]\r\n\r\n\r\n# Assign your output to the OUT variable.\r\noutput_path = IN[1]\r\n\r\n# Save final_df2 to Excel\r\ndf_new.to_excel(output_path, index=False)\r\n\r\nOUT = output_path",
+      "Engine": "CPython3",
+      "VariableInputPorts": true,
+      "Id": "c6149d2470464ecf8d1c77e168d80b75",
+      "NodeType": "PythonScriptNode",
+      "Inputs": [
+        {
+          "Id": "4441d5d794bf42d3be370ef641593514",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "33577f629f2041d1a63f37e6de6da1ca",
+          "Name": "IN[1]",
+          "Description": "Input #1",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "d91c4629104048fb9f7e472a91af65d3",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded Python script."
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "5ed411603c8842b68b05717188821df1",
+      "End": "33577f629f2041d1a63f37e6de6da1ca",
+      "Id": "eb4000a2f7a7415a832581d9ffa497b3",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "c616769fdb1f424e8d5be9508fe8b8f2",
+      "End": "4441d5d794bf42d3be370ef641593514",
+      "Id": "8306e01f0c3a46b7996ca7e24cece377",
+      "IsHidden": "False"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [
+    {
+      "Name": "DataType_Format_Output.xlsx",
+      "ReferenceType": "External",
+      "Nodes": [
+        "0a263a90d9244e5780be2fb49f211009",
+        "c6149d2470464ecf8d1c77e168d80b75"
+      ]
+    },
+    {
+      "Name": "Excel_sales_w04_2.xlsx",
+      "ReferenceType": "External",
+      "Nodes": [
+        "866d5a1282d04c62abe70075bd845420"
+      ]
+    }
+  ],
+  "EnableLegacyPolyCurveBehavior": null,
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Properties",
+      "Version": "3.0",
+      "Data": {}
+    }
+  ],
+  "Author": "",
+  "Linting": {
+    "activeLinter": "None",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "3.0.1.7382",
+      "RunType": "Automatic",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "_Background Preview",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "ConnectorPins": [],
+    "NodeViews": [
+      {
+        "Id": "0a263a90d9244e5780be2fb49f211009",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 98.0,
+        "Y": 334.0
+      },
+      {
+        "Id": "866d5a1282d04c62abe70075bd845420",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 20.0,
+        "Y": 67.0
+      },
+      {
+        "Id": "c6149d2470464ecf8d1c77e168d80b75",
+        "Name": "Python Script",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 345.0,
+        "Y": 90.0
+      }
+    ],
+    "Annotations": [],
+    "X": 2.0440999999999576,
+    "Y": 77.95480312499998,
+    "Zoom": 0.7082312500000001
+  }
+}
