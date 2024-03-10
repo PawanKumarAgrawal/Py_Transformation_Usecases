@@ -1,0 +1,204 @@
+{
+  "Uuid": "82e5cc37-a05e-4940-a4d5-5ef9467337f7",
+  "IsCustomNode": false,
+  "Description": "",
+  "Name": "Exercise_Excel_to_Excel(Python_Time_Zone)",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "0a0b9aee62614302b8186615068cb18d",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "21dc767151244c2da32ef52efaea109e",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\08 Cross_Country_Time_Zone\\Time_Zone_Output.xlsx"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "a0647b8924da4787bd902fa7ea6c091a",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "8e94786b9d0a49f3a991d64895b2e963",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\08 Cross_Country_Time_Zone\\CCTime_Zone.xlsx"
+    },
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "Code": "# Load the Python Standard and DesignScript Libraries\r\nimport sys\r\nimport clr\r\nimport pandas as pd\r\nfrom datetime import datetime\r\nimport pytz\r\n\r\n\r\n# The inputs to this node will be stored as a list in the IN variables.\r\ndataEnteringNode = IN\r\n\r\n# Place your code below this line\r\nData = IN[0]\r\n\r\ndf = pd.read_excel(Data)\r\n\r\n# Function to convert time to UTC\r\ndef convert_to_utc(time_str, country):\r\n    try:\r\n        local = pytz.timezone(country)\r\n    except pytz.UnknownTimeZoneError:\r\n        print(f\"Unknown time zone: {country}\")\r\n        return datetime.now()  # Default to current datetime\r\n    if isinstance(time_str, pd.Timestamp):\r\n        time_str = str(time_str)  # Convert Timestamp to string\r\n    naive = datetime.strptime(time_str, '%Y-%m-%d %H:%M:%S')  # Updated format string\r\n    local_dt = local.localize(naive, is_dst=None)\r\n    utc_dt = local_dt.astimezone(pytz.utc)\r\n    return utc_dt\r\n    \r\n\r\n# Convert start and end time to UTC\r\ndf['StartTime_UTC'] = df.apply(lambda x: convert_to_utc(x['StartTime'], x['Country']).strftime('%Y-%m-%d %H:%M:%S'), axis=1)\r\ndf['EndTime_UTC'] = df.apply(lambda x: convert_to_utc(x['EndTime'], x['Country']).strftime('%Y-%m-%d %H:%M:%S'), axis=1)\r\n\r\n\r\n# Function to get timezone offset\r\ndef get_timezone_offset(country, start_time):\r\n    try:\r\n        timezone = pytz.timezone(country)\r\n        offset = timezone.utcoffset(start_time)\r\n        offset_hours = offset.total_seconds() // 3600\r\n        offset_minutes = (offset.total_seconds() % 3600) // 60\r\n        offset_str = f\"UTC {'+' if offset_hours >= 0 else '-'}{abs(offset_hours)}:{abs(offset_minutes)}\"\r\n        return offset_str\r\n    except pytz.UnknownTimeZoneError:\r\n        print(f\"Unknown time zone: {country}\")\r\n        return 'Unknown'\r\n     \r\n\r\n# Add timezone offset to the Country column\r\ndf['Timezone_Offset'] = df.apply(lambda row: get_timezone_offset(row['Country'], row['StartTime']), axis=1)\r\n\r\n\r\n# Remove the decimal part from timezone offset\r\ndf['Timezone_Offset'] = df['Timezone_Offset'].str.replace('.0', '')\r\n\r\n\r\ndf_final = df[['MeetingID', 'StartTime', 'EndTime', 'Country', 'StartTime_UTC', 'EndTime_UTC', 'Timezone_Offset']]\r\n\r\n\r\n# Assign your output to the OUT variable.\r\noutput_path = IN[1]\r\n\r\n# Save final_df2 to Excel\r\ndf_final.to_excel(output_path, index=False)\r\n\r\nOUT = output_path",
+      "Engine": "CPython3",
+      "VariableInputPorts": true,
+      "Id": "c1a63afbe9ca4a5b8508e18782f117d9",
+      "NodeType": "PythonScriptNode",
+      "Inputs": [
+        {
+          "Id": "5b02696112474a3e9c72c1d0e00c4281",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "b35e60eeaa724f8686f8ca0cc7228556",
+          "Name": "IN[1]",
+          "Description": "Input #1",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "5beab9d7a24c473bb46b3f9403f38507",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded Python script."
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "21dc767151244c2da32ef52efaea109e",
+      "End": "b35e60eeaa724f8686f8ca0cc7228556",
+      "Id": "6b7e56eaa8c84b0f83b8dfa9cf93f9ab",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "8e94786b9d0a49f3a991d64895b2e963",
+      "End": "5b02696112474a3e9c72c1d0e00c4281",
+      "Id": "ee2d9a9688d94d54a6142cddceb3e41e",
+      "IsHidden": "False"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [
+    {
+      "Name": "Time_Zone_Output.xlsx",
+      "ReferenceType": "External",
+      "Nodes": [
+        "0a0b9aee62614302b8186615068cb18d",
+        "c1a63afbe9ca4a5b8508e18782f117d9"
+      ]
+    },
+    {
+      "Name": "CCTime_Zone.xlsx",
+      "ReferenceType": "External",
+      "Nodes": [
+        "a0647b8924da4787bd902fa7ea6c091a"
+      ]
+    }
+  ],
+  "EnableLegacyPolyCurveBehavior": null,
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Properties",
+      "Version": "3.0",
+      "Data": {}
+    }
+  ],
+  "Author": "",
+  "Linting": {
+    "activeLinter": "None",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "3.0.1.7382",
+      "RunType": "Automatic",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "_Background Preview",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "ConnectorPins": [],
+    "NodeViews": [
+      {
+        "Id": "0a0b9aee62614302b8186615068cb18d",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 110.0,
+        "Y": 314.0
+      },
+      {
+        "Id": "a0647b8924da4787bd902fa7ea6c091a",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 50.0,
+        "Y": 63.0
+      },
+      {
+        "Id": "c1a63afbe9ca4a5b8508e18782f117d9",
+        "Name": "Python Script",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 504.0,
+        "Y": 97.0
+      }
+    ],
+    "Annotations": [],
+    "X": -17.81545662716519,
+    "Y": 30.310116745949898,
+    "Zoom": 0.5937671406250001
+  }
+}
