@@ -1,0 +1,204 @@
+{
+  "Uuid": "7a9922fa-cca4-4aa8-8bf6-ba7413e78098",
+  "IsCustomNode": false,
+  "Description": "",
+  "Name": "Exercise_Excel_to_Excel(Python_InconsistantEmails)",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "9efcb9d108a745239dbb4b3fa09289cd",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "e7d926c8d0d34235a292649c1f5cb9b5",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\10 Inconsistent Emails\\Inconsistent Emails_Output.xlsx"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "4edbae1687634d96b2465e3565d658ab",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "feff4529974b44379094f8814b8d8a1e",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\10 Inconsistent Emails\\Inconsistent Emails.xlsx"
+    },
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "Code": "# Load the Python Standard and DesignScript Libraries\r\nimport sys\r\nimport clr\r\nimport pandas as pd\r\n\r\n# The inputs to this node will be stored as a list in the IN variables.\r\ndataEnteringNode = IN\r\n\r\n# Place your code below this line\r\n\r\nData = IN[0]\r\n\r\ndf = pd.read_excel(Data)\r\n\r\n# Function to process email anomalies and create flags\r\ndef process_email(email):\r\n    flag = ''\r\n    if not email:\r\n        flag = 'Not_an_email'\r\n    elif '@' not in email:\r\n        flag = 'DomainName_missing'\r\n    elif '.' not in email.split('@')[-1] or '.' == email.split('@')[-1]:\r\n        flag = 'Incomplete_DomainName'\r\n    elif not email.split('@')[0]:\r\n        flag = 'Incomplete_Username'\r\n    elif not email.split('@')[-1].split('.')[0]:\r\n        flag = 'Incomplete_DomainName'\r\n    return flag\r\n\r\n# Applying the function to create flags\r\ndf['Flag'] = df['Email'].apply(process_email)\r\n\r\n\r\n\r\n\r\n\r\n# Assign your output to the OUT variable.\r\noutput_path = IN[1]\r\n\r\n# Save final_df2 to Excel\r\ndf.to_excel(output_path, index=False)\r\n\r\nOUT = output_path",
+      "Engine": "CPython3",
+      "VariableInputPorts": true,
+      "Id": "64534f2e5b4b456db033f6148f20f3e3",
+      "NodeType": "PythonScriptNode",
+      "Inputs": [
+        {
+          "Id": "607d0f1642a049be8bb75790dd3c615b",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "415a599b33c84158a525eff9cb767e99",
+          "Name": "IN[1]",
+          "Description": "Input #1",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "1d9a2a1b6189400d9bd4dcd03ea61832",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded Python script."
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "e7d926c8d0d34235a292649c1f5cb9b5",
+      "End": "415a599b33c84158a525eff9cb767e99",
+      "Id": "a9613a15421c46b98ffc59d544878a0d",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "feff4529974b44379094f8814b8d8a1e",
+      "End": "607d0f1642a049be8bb75790dd3c615b",
+      "Id": "dd45fcbacb0845ff98b5b7d68e2e798b",
+      "IsHidden": "False"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [
+    {
+      "Name": "Inconsistent Emails_Output.xlsx",
+      "ReferenceType": "External",
+      "Nodes": [
+        "9efcb9d108a745239dbb4b3fa09289cd",
+        "64534f2e5b4b456db033f6148f20f3e3"
+      ]
+    },
+    {
+      "Name": "Inconsistent Emails.xlsx",
+      "ReferenceType": "External",
+      "Nodes": [
+        "4edbae1687634d96b2465e3565d658ab"
+      ]
+    }
+  ],
+  "EnableLegacyPolyCurveBehavior": null,
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Properties",
+      "Version": "3.0",
+      "Data": {}
+    }
+  ],
+  "Author": "",
+  "Linting": {
+    "activeLinter": "None",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "3.0.1.7382",
+      "RunType": "Automatic",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "_Background Preview",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "ConnectorPins": [],
+    "NodeViews": [
+      {
+        "Id": "9efcb9d108a745239dbb4b3fa09289cd",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 86.0,
+        "Y": 379.0
+      },
+      {
+        "Id": "4edbae1687634d96b2465e3565d658ab",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 17.17606360916716,
+        "Y": 120.46143120626209
+      },
+      {
+        "Id": "64534f2e5b4b456db033f6148f20f3e3",
+        "Name": "Python Script",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 308.71117308082637,
+        "Y": 157.35212721833443
+      }
+    ],
+    "Annotations": [],
+    "X": 4.881473769847673,
+    "Y": 114.12296416033453,
+    "Zoom": 0.7125948326284884
+  }
+}
