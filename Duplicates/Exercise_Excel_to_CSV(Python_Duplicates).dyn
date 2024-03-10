@@ -1,0 +1,204 @@
+{
+  "Uuid": "ba45bed6-7e55-4d99-9104-db8334091a4c",
+  "IsCustomNode": false,
+  "Description": "",
+  "Name": "Exercise_Excel_to_CSV(Python_Duplicates)",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "385b88bfcf6e43d8a3709ed7d819aea8",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "30bc5620f6bc4331a93fd6ac0730e563",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\05 Duplicates\\Duplicates.xlsx"
+    },
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "Code": "# Load the Python Standard and DesignScript Libraries\r\nimport sys\r\nimport clr\r\nimport pandas as pd\r\n\r\n# The inputs to this node will be stored as a list in the IN variables.\r\ndataEnteringNode = IN\r\n\r\n# Place your code below this line\r\n\r\ndf = pd.read_excel(IN[0])\r\n# Add a new column to flag duplicates\r\ndf['IsDuplicate'] = df.duplicated(subset=['Name', 'City'], keep=False)\r\n\r\n# Filter the DataFrame to include only rows where 'IsDuplicate' is True\r\ndf = df[df['IsDuplicate']]\r\n\r\n# Sort the DataFrame by 'Name' and 'City'\r\ndf = df.sort_values(by=['Name', 'City'])\r\n\r\n# Displaying the resulting table with outliers handled\r\ndf_new = df[['CustomerID', 'Name', 'City', 'IsDuplicate']]\r\n\r\n\r\n\r\n# Specify the output path\r\noutput_path = IN[1]\r\n\r\n# Save final_df2 to Excel\r\ndf_new.to_csv(output_path, index=False)\r\n\r\n# Assign the output path to the OUT variable\r\nOUT = output_path",
+      "Engine": "CPython3",
+      "VariableInputPorts": true,
+      "Id": "c3f093147f494beda77ccfeb7b92d288",
+      "NodeType": "PythonScriptNode",
+      "Inputs": [
+        {
+          "Id": "5479c940ff184854a1a72023f2a4a429",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "18ce486f58ec4578b8d9a34ae5ba00f1",
+          "Name": "IN[1]",
+          "Description": "Input #1",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "9c4c177c34024617aed62bc32df785c7",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded Python script."
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "aeb7d511130a48e5962d9d9871174e9f",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "4701f8d8068a43ae8620ea2e33a7dcf3",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\05 Duplicates\\Duplicates_Output.csv"
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "30bc5620f6bc4331a93fd6ac0730e563",
+      "End": "5479c940ff184854a1a72023f2a4a429",
+      "Id": "27bb62f1d71b4d58913e57cce783b333",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "4701f8d8068a43ae8620ea2e33a7dcf3",
+      "End": "18ce486f58ec4578b8d9a34ae5ba00f1",
+      "Id": "a9a7d151f2c1440daa80cecda85912bb",
+      "IsHidden": "False"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [
+    {
+      "Name": "Duplicates.xlsx",
+      "ReferenceType": "External",
+      "Nodes": [
+        "385b88bfcf6e43d8a3709ed7d819aea8"
+      ]
+    },
+    {
+      "Name": "Duplicates_Output.csv",
+      "ReferenceType": "External",
+      "Nodes": [
+        "c3f093147f494beda77ccfeb7b92d288",
+        "aeb7d511130a48e5962d9d9871174e9f"
+      ]
+    }
+  ],
+  "EnableLegacyPolyCurveBehavior": null,
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Properties",
+      "Version": "3.0",
+      "Data": {}
+    }
+  ],
+  "Author": "",
+  "Linting": {
+    "activeLinter": "None",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "3.0.1.7382",
+      "RunType": "Automatic",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "_Background Preview",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "ConnectorPins": [],
+    "NodeViews": [
+      {
+        "Id": "385b88bfcf6e43d8a3709ed7d819aea8",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 107.0,
+        "Y": 109.0
+      },
+      {
+        "Id": "c3f093147f494beda77ccfeb7b92d288",
+        "Name": "Python Script",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 414.0,
+        "Y": 141.0
+      },
+      {
+        "Id": "aeb7d511130a48e5962d9d9871174e9f",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 183.2324452641704,
+        "Y": 410.83777367914786
+      }
+    ],
+    "Annotations": [],
+    "X": -53.18250625000002,
+    "Y": -3.379712500000039,
+    "Zoom": 0.7082312500000001
+  }
+}
