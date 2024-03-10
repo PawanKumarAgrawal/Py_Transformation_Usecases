@@ -1,0 +1,256 @@
+{
+  "Uuid": "d75c10ff-b2f9-48ca-82fa-2f0093e803c2",
+  "IsCustomNode": false,
+  "Description": "",
+  "Name": "Exercise_Excel_to_Excel(Python_ProductClassification)",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "c100372b51e74b0a87cbb0ec28a29e25",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "c57743ce4a58419ea1f313b611f325c4",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\Z Product_Classification\\Product_Classification_Output.xlsx"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "9b576a09a77c48e08740d38b9ce15279",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "3b6756351d0045519ea389a927f28033",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\Z Product_Classification\\T_Data.xlsx"
+    },
+    {
+      "ConcreteType": "CoreNodeModels.Input.StringInput, CoreNodeModels",
+      "Id": "d07ad004307a4eb2ae74e9b67e79013b",
+      "NodeType": "StringInputNode",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "7e691171665b4d3f92a13faf7e9a3df2",
+          "Name": "",
+          "Description": "String",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Creates a string",
+      "InputValue": "E:\\FactoBIBuild Practice\\Dynamo files\\Z Product_Classification\\S_Data.xlsx"
+    },
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "Code": "# Load the Python Standard and DesignScript Libraries\r\nimport sys\r\nimport clr\r\nimport pandas as pd\r\n\r\n\r\n# The inputs to this node will be stored as a list in the IN variables.\r\ndataEnteringNode = IN\r\n\r\n# Place your code below this line\r\n\r\nData1 = IN[0]\r\nData2 = IN[1]\r\n\r\n# Load data from Excel files\r\nfile1 = pd.read_excel(Data1)\r\nfile2 = pd.read_excel(Data2)\r\n\r\n\r\n# Task 1: Inner join the two dataframes\r\njoined_table = pd.merge(file2, file1, how=\"left\", left_on=\"T_Commodity Title\", right_on=\"S_Commodity Title\")\r\n\r\n\r\n# Task 2: Create observations column\r\ndef classify(row):\r\n    if pd.isna(row['S_Commodity Title']):\r\n        return \"Commodity Title not in Standard Table\"\r\n    elif pd.isna(row['T_Commodity Code']):\r\n        return \"Unclassified\"\r\n    elif row['S_Commodity Code'] != row['T_Commodity Code']:\r\n        return \"Misclassified\"\r\n    else:\r\n        return \"Rightly Classified\"\r\n\r\njoined_table['Observations'] = joined_table.apply(classify, axis=1)\r\n\r\n\r\n# Task 3: Create suggestions column\r\ndef suggest(row):\r\n    if pd.isna(row['T_Commodity Code']):\r\n        return row['S_Commodity Code']\r\n    elif row['S_Commodity Code'] != row['T_Commodity Code']:\r\n        return row['S_Commodity Code']\r\n    else:\r\n        return row['T_Commodity Code']\r\n\r\njoined_table['Suggestions'] = joined_table.apply(suggest, axis=1)\r\n\r\n\r\n# Filter out rows that are rightly classified\r\nfiltered_table = joined_table[joined_table['Observations'] != 'Rightly Classified']\r\n\r\n\r\n\r\n# Assign your output to the OUT variable.\r\noutput_path = IN[2]\r\n\r\n# Save final_df to Excel\r\nfiltered_table.to_excel(output_path, index=False)\r\n\r\nOUT = output_path\r\n\r\n",
+      "Engine": "CPython3",
+      "VariableInputPorts": true,
+      "Id": "a16ae99746f44917b2f2e3cd92b9384f",
+      "NodeType": "PythonScriptNode",
+      "Inputs": [
+        {
+          "Id": "e16d9fd78636423285799df1442359ba",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "51da37509de545f8ab37425932b23050",
+          "Name": "IN[1]",
+          "Description": "Input #1",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "a70ceebf6e784ac49228afacb280ef22",
+          "Name": "IN[2]",
+          "Description": "Input #2",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "7a6af07c87534882a10e4063f666f539",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded Python script."
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "c57743ce4a58419ea1f313b611f325c4",
+      "End": "a70ceebf6e784ac49228afacb280ef22",
+      "Id": "128ca9c342fe4f478c08c3b44582d0e7",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "3b6756351d0045519ea389a927f28033",
+      "End": "51da37509de545f8ab37425932b23050",
+      "Id": "b08f5a31937c4f889733edd5154efa63",
+      "IsHidden": "False"
+    },
+    {
+      "Start": "7e691171665b4d3f92a13faf7e9a3df2",
+      "End": "e16d9fd78636423285799df1442359ba",
+      "Id": "50a79b57e5f34229b66ee62cd718fac4",
+      "IsHidden": "False"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [
+    {
+      "Name": "Product_Classification_Output.xlsx",
+      "ReferenceType": "External",
+      "Nodes": [
+        "c100372b51e74b0a87cbb0ec28a29e25",
+        "a16ae99746f44917b2f2e3cd92b9384f"
+      ]
+    },
+    {
+      "Name": "T_Data.xlsx",
+      "ReferenceType": "External",
+      "Nodes": [
+        "9b576a09a77c48e08740d38b9ce15279"
+      ]
+    },
+    {
+      "Name": "S_Data.xlsx",
+      "ReferenceType": "External",
+      "Nodes": [
+        "d07ad004307a4eb2ae74e9b67e79013b"
+      ]
+    }
+  ],
+  "EnableLegacyPolyCurveBehavior": null,
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Properties",
+      "Version": "3.0",
+      "Data": {}
+    }
+  ],
+  "Author": "",
+  "Linting": {
+    "activeLinter": "None",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "3.0.1.7382",
+      "RunType": "Automatic",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "_Background Preview",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "ConnectorPins": [],
+    "NodeViews": [
+      {
+        "Id": "c100372b51e74b0a87cbb0ec28a29e25",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 51.41196819541642,
+        "Y": 597.1404378866366
+      },
+      {
+        "Id": "9b576a09a77c48e08740d38b9ce15279",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 23.17260428708846,
+        "Y": 368.71463240290507
+      },
+      {
+        "Id": "d07ad004307a4eb2ae74e9b67e79013b",
+        "Name": "String",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 20.82047706875403,
+        "Y": 161.41196819541636
+      },
+      {
+        "Id": "a16ae99746f44917b2f2e3cd92b9384f",
+        "Name": "Python Script",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "ShowGeometry": true,
+        "X": 406.65529347059777,
+        "Y": 317.65825074790195
+      }
+    ],
+    "Annotations": [],
+    "X": -7.417549313798247,
+    "Y": -16.387062500000013,
+    "Zoom": 0.7082312500000001
+  }
+}
